@@ -3,7 +3,7 @@ package webelement.customElementsDecorator;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.internal.Locatable;
+import org.openqa.selenium.interactions.Locatable;
 import org.openqa.selenium.internal.WrapsElement;
 import org.openqa.selenium.support.pagefactory.ElementLocator;
 import org.openqa.selenium.support.pagefactory.internal.LocatingElementHandler;
@@ -41,7 +41,7 @@ public class CustomElementLocator implements MethodInterceptor {
      * @param objects     The parameter object of the value.
      * @param methodProxy Used to call the method of the superclass.
      **/
-    @Override
+    //@Override
     public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable {
         // Configure a custom webelement (WebButton etc.)
         if (o instanceof CustomWebElement) {

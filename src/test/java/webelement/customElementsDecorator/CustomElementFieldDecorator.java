@@ -85,7 +85,7 @@ public class CustomElementFieldDecorator implements FieldDecorator {
      * @param field  The field which should be decorated. Should be an FindBy annotated (custom) webelement.
      * @return Value to decorate the field with.
      **/
-    @Override
+    //@Override
     public Object decorate(ClassLoader loader, Field field) {
         // If it is a custom annotated webelement, then ensure proper initialisation via the adding of the callback method
         if (CustomWebElement.class.isAssignableFrom(field.getType())  && field.isAnnotationPresent(FindBy.class)) {

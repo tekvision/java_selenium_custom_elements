@@ -117,4 +117,9 @@ public abstract class CustomWebElement {
     protected String getLocatorValue(WebElementTransformer.LocatorType type) {
         return transformer.getLocatorValue(getBy(), type);
     }
+    
+    public String getTagName()
+    {
+    	return webDriver.findElement(getBy()).getTagName();
+    }
 }
