@@ -4,6 +4,7 @@ import org.openqa.selenium.support.PageFactory;
 import webelement.customElementsDecorator.CustomElementFieldDecorator;
 import webelement.modules.WebElementTransformer;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 
 /**
@@ -121,5 +122,10 @@ public abstract class CustomWebElement {
     public String getTagName()
     {
     	return webDriver.findElement(getBy()).getTagName();
+    }
+    
+    public void sendKeys(Keys keys)
+    {
+    	webDriver.findElement(getBy()).sendKeys(keys);
     }
 }
