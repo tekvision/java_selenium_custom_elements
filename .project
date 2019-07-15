@@ -16,9 +16,19 @@
 	</natures>
 	<linkedResources>
 		<link>
+			<name>asm-7.1.jar</name>
+			<type>1</type>
+			<location>E:/Installables/Selenium Jars/CGlib/Cglib-3.2.12/asm-7.1.jar</location>
+		</link>
+		<link>
 			<name>byte-buddy-1.8.15.jar</name>
 			<type>1</type>
 			<location>C:/Users/Accessibility 2/Downloads/libs/byte-buddy-1.8.15.jar</location>
+		</link>
+		<link>
+			<name>cglib-3.2.12.jar</name>
+			<type>1</type>
+			<location>E:/Installables/Selenium Jars/CGlib/Cglib-3.2.12/cglib-3.2.12.jar</location>
 		</link>
 		<link>
 			<name>client-combined-3.141.59-sources.jar</name>

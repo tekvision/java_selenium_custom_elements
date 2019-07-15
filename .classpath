@@ -11,5 +11,7 @@
 	<classpathentry kind="lib" path="okhttp-3.11.0.jar"/>
 	<classpathentry kind="lib" path="okio-1.14.0.jar"/>
 	<classpathentry kind="lib" path="selenium-server-standalone-3.9.1.jar"/>
+	<classpathentry kind="lib" path="asm-7.1.jar"/>
+	<classpathentry kind="lib" path="cglib-3.2.12.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
