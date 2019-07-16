@@ -1,7 +1,7 @@
 package example.tests;
 
 import example.pages.BingPage;
-import io.github.bonigarcia.wdm.ChromeDriverManager;
+//import io.github.bonigarcia.wdm.ChromeDriverManager;
 import org.junit.After;
 import org.junit.Before;
 import org.openqa.selenium.WebDriver;
@@ -27,7 +27,7 @@ public class Test {
     @Before
     public void setUp() {
         // Setup chrome driver via webdrivermanager for easy usage
-        ChromeDriverManager.getInstance().setup();
+        //ChromeDriverManager.getInstance().setup();
 
         // Create it
         webDriver = new ChromeDriver();

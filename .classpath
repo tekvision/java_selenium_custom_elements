@@ -2,16 +2,19 @@
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="src/test/java"/>
-	<classpathentry kind="lib" path="selenium-3.9.1-nodeps-sources.jar"/>
-	<classpathentry kind="lib" path="byte-buddy-1.8.15.jar"/>
-	<classpathentry kind="lib" path="client-combined-3.141.59-sources.jar"/>
-	<classpathentry kind="lib" path="client-combined-3.141.59.jar"/>
-	<classpathentry kind="lib" path="commons-exec-1.3.jar"/>
-	<classpathentry kind="lib" path="guava-25.0-jre.jar"/>
-	<classpathentry kind="lib" path="okhttp-3.11.0.jar"/>
-	<classpathentry kind="lib" path="okio-1.14.0.jar"/>
-	<classpathentry kind="lib" path="selenium-server-standalone-3.9.1.jar"/>
-	<classpathentry kind="lib" path="asm-7.1.jar"/>
-	<classpathentry kind="lib" path="cglib-3.2.12.jar"/>
+	<classpathentry kind="lib" path="lib/byte-buddy-1.8.15.jar"/>
+	<classpathentry kind="lib" path="lib/client-combined-3.141.59-sources.jar"/>
+	<classpathentry kind="lib" path="lib/client-combined-3.141.59.jar"/>
+	<classpathentry kind="lib" path="lib/commons-exec-1.3.jar"/>
+	<classpathentry kind="lib" path="lib/guava-25.0-jre.jar"/>
+	<classpathentry kind="lib" path="lib/hamcrest-core-1.3.jar"/>
+	<classpathentry kind="lib" path="lib/junit-4.12.jar"/>
+	<classpathentry kind="lib" path="lib/okhttp-3.11.0.jar"/>
+	<classpathentry kind="lib" path="lib/okio-1.14.0.jar"/>
+	<classpathentry kind="lib" path="lib/asm-7.1.jar"/>
+	<classpathentry kind="lib" path="lib/cglib-3.2.12.jar"/>
+	<classpathentry kind="lib" path="lib/selenium-3.9.1-nodeps-sources.jar"/>
+	<classpathentry kind="lib" path="lib/selenium-3.9.1-nodeps.jar"/>
+	<classpathentry kind="lib" path="lib/selenium-server-standalone-3.9.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
