@@ -1,7 +1,5 @@
 package webelement.customElementsDecorator;
 
-import org.openqa.selenium.support.pagefactory.internal.LocatingElementListHandler;
-import webelement.customElements.concreteElements.WebPageElement;
 import webelement.customElements.superElements.CustomWebElement;
 import webelement.modules.WebElementTransformer;
 import net.sf.cglib.proxy.Enhancer;
@@ -16,9 +14,6 @@ import org.openqa.selenium.support.pagefactory.ElementLocator;
 import org.openqa.selenium.support.pagefactory.FieldDecorator;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Proxy;
-import java.util.List;
 
 /*
  * Good sources:
