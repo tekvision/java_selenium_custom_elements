@@ -96,7 +96,7 @@ public abstract class CustomWebElement {
      *
      * @return Returns the webDriver.
      **/
-    protected WebDriver getWebDriver() {
+    public WebDriver getWebDriver() {
         return webDriver;
     }
 
