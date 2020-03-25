@@ -8,17 +8,23 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.FindBys;
+import org.openqa.selenium.support.FindAll;
 import org.openqa.selenium.support.pagefactory.DefaultElementLocatorFactory;
 import org.openqa.selenium.support.pagefactory.DefaultFieldDecorator;
 import org.openqa.selenium.support.pagefactory.ElementLocator;
 import org.openqa.selenium.support.pagefactory.FieldDecorator;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.List;
 
 /*
  * Good sources:
  * http://www.alechenninger.com/2014/07/a-case-study-of-javas-dynamic-proxies_14.html
  * http://www.mograblog.com/2013/08/extending-selenium-in-java.html
+ * https://www.baeldung.com/cglib
  */
 
 /*
@@ -86,11 +92,37 @@ public class CustomElementFieldDecorator implements FieldDecorator {
         if (CustomWebElement.class.isAssignableFrom(field.getType())  && field.isAnnotationPresent(FindBy.class)) {
             return getEnhancedObject(field.getType(), getElementHandler(field), field.getAnnotation(FindBy.class));
         }
+        else if(isDecoratableList(field)) {
+            	return null;//tbd
+        }
         // If it is a normal webelement, then use the default FieldDecorator implementation
         else {
             return defaultFieldDecorator.decorate(loader, field);
         }
     }
+
+    protected boolean isDecoratableList(Field field) {
+        if (!List.class.isAssignableFrom(field.getType())) {
+          return false;
+        }
+
+        // Type erasure in Java isn't complete. Attempt to discover the generic
+        // type of the list.
+        Type genericType = field.getGenericType();
+        if (!(genericType instanceof ParameterizedType)) {
+          return false;
+        }
+
+        Type listType = ((ParameterizedType) genericType).getActualTypeArguments()[0];
+
+        if (!CustomWebElement.class.equals(listType)) {
+          return false;
+        }
+
+        return field.getAnnotation(FindBy.class) != null ||
+               field.getAnnotation(FindBys.class) != null ||
+               field.getAnnotation(FindAll.class) != null;
+      }
 
     /**
      * Creates the class with the callback method. The callback method will be called when a method is called on
