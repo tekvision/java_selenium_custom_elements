@@ -93,7 +93,7 @@ public class CustomElementFieldDecorator implements FieldDecorator {
             return getEnhancedObject(field.getType(), getElementHandler(field), field.getAnnotation(FindBy.class));
         }
         else if(isDecoratableList(field)) {
-            	return getEnhancedObject(field.getType(), getElementListHandler(field), field.getAnnotation(FindBy.class));
+            	return getEnhancedListObject(field.getType(), getElementListHandler(field), field.getAnnotation(FindBy.class));
         }
         // If it is a normal webelement, then use the default FieldDecorator implementation
         else {
@@ -168,5 +168,14 @@ public class CustomElementFieldDecorator implements FieldDecorator {
         e.setCallback(methodInterceptor);
 
         return e.create(new Class[]{WebDriver.class, By.class}, new Object[]{webDriver, transformer.transformFindByToBy(locator)});
+    }
+
+    private Object getEnhancedListObject(Class<?> clzz, MethodInterceptor methodInterceptor, FindBy locator) {
+        Enhancer e = new Enhancer();
+
+        e.setSuperclass(clzz);
+        e.setCallback(methodInterceptor);
+
+        return e.create();
     }
 }
