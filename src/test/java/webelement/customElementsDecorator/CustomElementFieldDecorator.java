@@ -93,7 +93,7 @@ public class CustomElementFieldDecorator implements FieldDecorator {
             return getEnhancedObject(field.getType(), getElementHandler(field), field.getAnnotation(FindBy.class));
         }
         else if(isDecoratableList(field)) {
-            	return null;//tbd
+            	return getEnhancedObject(field.getType(), getElementListHandler(field), field.getAnnotation(FindBy.class));
         }
         // If it is a normal webelement, then use the default FieldDecorator implementation
         else {
@@ -101,7 +101,7 @@ public class CustomElementFieldDecorator implements FieldDecorator {
         }
     }
 
-    protected boolean isDecoratableList(Field field) {
+    private boolean isDecoratableList(Field field) {
         if (!List.class.isAssignableFrom(field.getType())) {
           return false;
         }
@@ -132,6 +132,10 @@ public class CustomElementFieldDecorator implements FieldDecorator {
      **/
     private CustomElementLocator getElementHandler(Field field) {
         return new CustomElementLocator(getLocator(field));
+    }
+
+    private CustomElementListLocator getElementListHandler(Field field) {
+        return new CustomElementListLocator(getLocator(field));
     }
 
     /**
