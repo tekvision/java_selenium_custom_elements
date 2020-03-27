@@ -3,9 +3,11 @@ package webelement.customElements.superElements;
 import org.openqa.selenium.support.PageFactory;
 import webelement.customElementsDecorator.CustomElementFieldDecorator;
 import webelement.modules.WebElementTransformer;
+import java.util.List;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
 /**
  * Parent class for all complex web elements.
@@ -119,6 +121,9 @@ public abstract class CustomWebElement {
         return transformer.getLocatorValue(getBy(), type);
     }
     
+    /*
+     * This two method we have defined for use CustomWebElement properly.
+     * */
     public String getTagName()
     {
     	return webDriver.findElement(getBy()).getTagName();
@@ -127,5 +132,65 @@ public abstract class CustomWebElement {
     public void sendKeys(Keys keys)
     {
     	webDriver.findElement(getBy()).sendKeys(keys);
+    }
+    
+    /**
+     * Reduce the complexity of hierarchy 
+     * No need to implement WebPageElement class.
+     * 
+     * Clicks on the button.
+     **/
+    public void click() {
+        getWebDriver().findElement(getBy()).click();
+    }
+
+    /**
+     * Sets the text of the element.
+     **/
+    public void setText(String text) {
+        getWebDriver().findElement(getBy()).clear();
+        getWebDriver().findElement(getBy()).sendKeys(text);
+    }
+
+    /**
+     * Finds an element which uses the locator of this element as base.
+     *
+     * @return The found sub web element of this complex web element.
+     **/
+    public WebElement findElement(By locator) {
+        return getWebDriver().findElement(getBy()).findElement(locator);
+    }
+
+    /**
+     * Finds elements which uses the locator of this element as base.
+     *
+     * @return The found sub web elements of this complex web element.
+     **/
+    public List<WebElement> findElements(By locator) {
+        return getWebDriver().findElement(getBy()).findElements(locator);
+    }
+
+    /**
+     * Returns the node text of the element.
+     *
+     * @return Returns the node text of the element.
+     **/
+    public String getText() {
+        return getWebDriver().findElement(getBy()).getText();
+    }
+    
+    public boolean isSelected()
+    {
+    	return getWebDriver().findElement(getBy()).isSelected();
+    }
+    
+    public boolean isDisplayed()
+    {
+    	return getWebDriver().findElement(getBy()).isDisplayed();
+    }
+    
+    public boolean isEnabled()
+    {
+    	return getWebDriver().findElement(getBy()).isEnabled();
     }
 }
