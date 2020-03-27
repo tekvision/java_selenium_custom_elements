@@ -18,7 +18,7 @@ import org.openqa.selenium.support.pagefactory.FieldDecorator;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.List;
+import java.util.List;import java.util.ArrayList;
 
 /*
  * Good sources:
@@ -88,12 +88,13 @@ public class CustomElementFieldDecorator implements FieldDecorator {
      **/
     //@Override
     public Object decorate(ClassLoader loader, Field field) {
-        // If it is a custom annotated webelement, then ensure proper initialisation via the adding of the callback method
+    	//If it is a custom annotated webelement, then ensure proper initialisation via the adding of the callback method
         if (CustomWebElement.class.isAssignableFrom(field.getType())  && field.isAnnotationPresent(FindBy.class)) {
             return getEnhancedObject(field.getType(), getElementHandler(field), field.getAnnotation(FindBy.class));
         }
+        //Else if it happens to be List<? extends CustomWebElement>
         else if(isDecoratableList(field)) {
-            	return getEnhancedListObject(field.getType(), getElementListHandler(field), field.getAnnotation(FindBy.class));
+        	return getEnhancedListObject(field.getType(), getElementListHandler(field), field.getAnnotation(FindBy.class));
         }
         // If it is a normal webelement, then use the default FieldDecorator implementation
         else {
@@ -114,14 +115,25 @@ public class CustomElementFieldDecorator implements FieldDecorator {
         }
 
         Type listType = ((ParameterizedType) genericType).getActualTypeArguments()[0];
+        //System.out.println("Generic type within List is " + listType.getTypeName());
+        boolean isAssignableFromCustomWebElement = false;
+        try {
+        	Class<?> listTypeClass = Class.forName(listType.getTypeName());
+        	//System.out.println(" and Class formed is " + listTypeClass.getName());
+            if (!CustomWebElement.class.isAssignableFrom(listTypeClass )) {
+                return false;
+              } else {
+            	  isAssignableFromCustomWebElement = true;
+              }
 
-        if (!CustomWebElement.class.equals(listType)) {
-          return false;
+        } catch(ClassNotFoundException e) {
+        	return false;
         }
 
-        return field.getAnnotation(FindBy.class) != null ||
+        return (field.getAnnotation(FindBy.class) != null ||
                field.getAnnotation(FindBys.class) != null ||
-               field.getAnnotation(FindAll.class) != null;
+               field.getAnnotation(FindAll.class) != null) &&
+        		isAssignableFromCustomWebElement;
       }
 
     /**
@@ -170,12 +182,17 @@ public class CustomElementFieldDecorator implements FieldDecorator {
         return e.create(new Class[]{WebDriver.class, By.class}, new Object[]{webDriver, transformer.transformFindByToBy(locator)});
     }
 
-    private Object getEnhancedListObject(Class<?> clzz, MethodInterceptor methodInterceptor, FindBy locator) {
+    private Object getEnhancedListObject(Class<?> listClass, MethodInterceptor methodInterceptor, FindBy locator) {
         Enhancer e = new Enhancer();
 
-        e.setSuperclass(clzz);
+        if(listClass.isInterface()) {
+        	e.setSuperclass(ArrayList.class);
+        } else {
+        	e.setSuperclass(listClass);
+        }
+        e.setInterfaces(new Class[] {List.class});
         e.setCallback(methodInterceptor);
-
+        
         return e.create();
     }
 }
