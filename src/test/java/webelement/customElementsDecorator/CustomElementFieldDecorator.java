@@ -4,6 +4,7 @@ import webelement.customElements.superElements.CustomWebElement;
 import webelement.modules.WebElementTransformer;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.By;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebDriver;
@@ -18,7 +19,9 @@ import org.openqa.selenium.support.pagefactory.FieldDecorator;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.List;import java.util.ArrayList;
+import java.util.List;
+import java.util.Iterator;
+import java.util.ArrayList;
 
 /*
  * Good sources:
@@ -94,7 +97,14 @@ public class CustomElementFieldDecorator implements FieldDecorator {
         }
         //Else if it happens to be List<? extends CustomWebElement>
         else if(isDecoratableList(field)) {
-        	return getEnhancedListObject(field.getType(), getElementListHandler(field), field.getAnnotation(FindBy.class));
+            Type genericType = field.getGenericType();
+            Type listType = ((ParameterizedType) genericType).getActualTypeArguments()[0];
+            try {
+            	Class<?> listTypeClass = Class.forName(listType.getTypeName());
+            	return getEnhancedListObject(field.getType(), getElementListHandler(field), field.getAnnotation(FindBy.class), listTypeClass, getElementHandler(field));
+            } catch(ClassNotFoundException e) {
+            	return null;
+            }
         }
         // If it is a normal webelement, then use the default FieldDecorator implementation
         else {
@@ -182,17 +192,32 @@ public class CustomElementFieldDecorator implements FieldDecorator {
         return e.create(new Class[]{WebDriver.class, By.class}, new Object[]{webDriver, transformer.transformFindByToBy(locator)});
     }
 
-    private Object getEnhancedListObject(Class<?> listClass, MethodInterceptor methodInterceptor, FindBy locator) {
-        Enhancer e = new Enhancer();
+    @SuppressWarnings("unchecked")
+	private Object getEnhancedListObject(Class<?> listClass, MethodInterceptor methodInterceptor, FindBy locator, Class<?> elementClass, MethodInterceptor elementMethodInterceptor) {
+        Enhancer listEnhancer = new Enhancer();
 
         if(listClass.isInterface()) {
-        	e.setSuperclass(ArrayList.class);
+        	listEnhancer.setSuperclass(ArrayList.class);
         } else {
-        	e.setSuperclass(listClass);
+        	listEnhancer.setSuperclass(listClass);
         }
-        e.setInterfaces(new Class[] {List.class});
-        e.setCallback(methodInterceptor);
-        
-        return e.create();
+        listEnhancer.setInterfaces(new Class[] {List.class});
+        listEnhancer.setCallback(methodInterceptor);
+        List<CustomWebElement> customElements = (List<CustomWebElement>) listEnhancer.create();
+        WebElementTransformer transformer = new WebElementTransformer();
+        By by = transformer.transformFindByToBy(locator);
+        List<WebElement> elements = webDriver.findElements(by);
+        Iterator<WebElement> webElementIterator = elements.iterator();
+        int elementIndex = 0;
+        while(webElementIterator.hasNext()) {
+        	WebElement element = webElementIterator.next();
+        	Enhancer elementEnhancer = new Enhancer();
+        	elementEnhancer.setSuperclass(elementClass);
+        	elementEnhancer.setCallback(elementMethodInterceptor);
+        	CustomWebElement customElement = (CustomWebElement)elementEnhancer.create(new Class[]{WebDriver.class, By.class, WebElement.class, int.class}, new Object[]{webDriver, by, element, elementIndex});
+        	customElements.add(customElement);
+        	elementIndex = elementIndex + 1;
+        }
+        return customElements;
     }
 }
