@@ -31,14 +31,15 @@ public abstract class CustomWebElement {
 
     /**
      * Used to store a WebElement so that driver.findElement() isn't called repetatively
+     * Don't rename this variable name. We check for it and ignore it in our CustomElementFieldDecorator class
      */
-    protected WebElement element;
+    protected WebElement __actual_web_element_reference;
 
     /**
      * Used to store list index of WebElement within a List<WebElement>
      * Can be used to determine getBy() with this index
      */
-    private int listIndex;
+    private int listIndex = -1;
 
     /**
      * Constructor.
@@ -50,10 +51,15 @@ public abstract class CustomWebElement {
         this.webDriver = webDriver;
         locator = by;
         transformer = new WebElementTransformer();
-        element = this.webDriver.findElement(locator);
-
+        
         // Call the page factory on this object to initialize custom webelements in custom webelements (aka nesting)
         PageFactory.initElements(new CustomElementFieldDecorator(webDriver, webDriver), this);
+        //The following assignment needs to be done after initElements
+        //initElements first scans all Page classes and CustomWebElement classes for WebElement or CustomWebElement fields nested within
+        //If the field name happens to be the following, null is assigned by initElements
+        //Hence we need to assign the actual value after initELements is done assigning null otherwise our value is bound to get overwritten by null
+        __actual_web_element_reference = this.webDriver.findElement(locator);
+
     }
 
     /**
@@ -68,11 +74,15 @@ public abstract class CustomWebElement {
         this.webDriver = webDriver;
         locator = by;
         transformer = new WebElementTransformer();
-        element = webElement;
         this.listIndex = listIndex;
 
         // Call the page factory on this object to initialize custom webelements in custom webelements (aka nesting)
         PageFactory.initElements(new CustomElementFieldDecorator(webDriver, webDriver), this);
+        //The following assignment needs to be done after initElements
+        //initElements first scans all Page classes and CustomWebElement classes for WebElement or CustomWebElement fields nested within
+        //If the field name happens to be the following, null is assigned by initElements
+        //Hence we need to assign the actual value after initELements is done assigning null otherwise our value is bound to get overwritten by null
+        __actual_web_element_reference = webElement;
     }
 
     /**
@@ -120,7 +130,7 @@ public abstract class CustomWebElement {
      * @return The attribute/property's current value or null if the value is not set.
      */
     public String getAttribute(String attributeName) {
-        return element.getAttribute(attributeName);
+        return __actual_web_element_reference.getAttribute(attributeName);
     }
 
     /**
@@ -167,12 +177,12 @@ public abstract class CustomWebElement {
      * */
     public String getTagName()
     {
-    	return element.getTagName();
+    	return __actual_web_element_reference.getTagName();
     }
     
     public void sendKeys(Keys keys)
     {
-    	element.sendKeys(keys);
+    	__actual_web_element_reference.sendKeys(keys);
     }
     
     /**
@@ -182,15 +192,15 @@ public abstract class CustomWebElement {
      * Clicks on the button.
      **/
     public void click() {
-        element.click();
+        __actual_web_element_reference.click();
     }
 
     /**
      * Sets the text of the element.
      **/
     public void setText(String text) {
-        element.clear();
-        element.sendKeys(text);
+        __actual_web_element_reference.clear();
+        __actual_web_element_reference.sendKeys(text);
     }
 
     /**
@@ -199,7 +209,7 @@ public abstract class CustomWebElement {
      * @return The found sub web element of this complex web element.
      **/
     public WebElement findElement(By locator) {
-        return element.findElement(locator);
+        return __actual_web_element_reference.findElement(locator);
     }
 
     /**
@@ -208,7 +218,7 @@ public abstract class CustomWebElement {
      * @return The found sub web elements of this complex web element.
      **/
     public List<WebElement> findElements(By locator) {
-        return element.findElements(locator);
+        return __actual_web_element_reference.findElements(locator);
     }
 
     /**
@@ -217,21 +227,21 @@ public abstract class CustomWebElement {
      * @return Returns the node text of the element.
      **/
     public String getText() {
-        return element.getText();
+        return __actual_web_element_reference.getText();
     }
     
     public boolean isSelected()
     {
-    	return element.isSelected();
+    	return __actual_web_element_reference.isSelected();
     }
     
     public boolean isDisplayed()
     {
-    	return element.isDisplayed();
+    	return __actual_web_element_reference.isDisplayed();
     }
     
     public boolean isEnabled()
     {
-    	return element.isEnabled();
+    	return __actual_web_element_reference.isEnabled();
     }
 }

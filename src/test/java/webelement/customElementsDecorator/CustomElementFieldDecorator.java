@@ -108,7 +108,12 @@ public class CustomElementFieldDecorator implements FieldDecorator {
         }
         // If it is a normal webelement, then use the default FieldDecorator implementation
         else {
-            return defaultFieldDecorator.decorate(loader, field);
+            //ignore if WebElement happens to be __actual_web_element_reference
+        	//we maintain this reference within CustomWebElement and we don't want it to be located as it isn't present on page.
+        	if(!field.getName().equals("__actual_web_element_reference"))
+        		return defaultFieldDecorator.decorate(loader, field);
+        	else
+        		return null;
         }
     }
 
