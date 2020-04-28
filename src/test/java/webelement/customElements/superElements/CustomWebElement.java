@@ -95,10 +95,18 @@ public abstract class CustomWebElement {
     }
 
     /**
+     * Returns the WebElement corresponding to this CustomWebElement
+     * @return WebElement
+     */
+    protected WebElement getWebElement() {
+    	return __actual_web_element_reference;
+    }
+
+    /**
      * Returns the list index within a List<WebElement>
      * @return listIndex
      */
-    public int getListIndex() {
+    protected int getListIndex() {
     	return this.listIndex;
     }
 
