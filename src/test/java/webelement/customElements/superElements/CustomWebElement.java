@@ -106,7 +106,7 @@ public abstract class CustomWebElement {
      * Returns the list index within a List<WebElement>
      * @return listIndex
      */
-    protected int getListIndex() {
+    public int getListIndex() {
     	return this.listIndex;
     }
 
